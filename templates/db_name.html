@@ -1,0 +1,268 @@
+<html>
+<head>
+    <title>Database Viewer
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<style>
+	thead{
+	background-color: #E15730; color: white;
+	}
+	td, th {
+  border: 1px solid #dddddd;
+  text-align: center;;
+  padding: 8px;
+}
+.green{
+  background-color:green;
+}
+.red{
+  background-color:red;
+}
+.amber{
+background-color:amber;
+}
+
+</style>
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js">
+    </script>
+    <script>
+        $(document).ready(function() {
+        $("#tables_list").hide();
+        $("#result_table").hide();
+            var checkedIds;
+            $('select').formSelect();
+            $('.sidenav').sidenav();
+            $("button").click(function() {
+                console.log("clieck collected");
+                var favorite = [];
+                $.each($("input[name='tables']:checked"), function() {
+                    favorite.push($(this).val());
+                });
+                alert("Selected Tables: " + favorite.join(", "));
+            });
+        });
+    </script>
+    {% csrf_token %} {% if db_names %}
+	<nav style="background-color:#E15730;">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo right">AKIRA
+				</a>
+        </div>
+    </nav>
+	<div class="row">
+		<div id="side_nav" class="col s4">
+		<!--<ul id="slide-out" class="sidenav sidenav-fixed">-->
+		<ul>
+			<li>
+				<div class="input-field col s12">
+					<h6>
+							<b>Please select a database
+							</b>
+						</h6>
+					<!-- Nav tabs -->
+					<select name="dropdown" id="db_names" class="center-align" style="display:block;">
+						<option selected="selected" disabled>Select
+						</option>
+						{% for service in db_names %}
+						<option value="{{ service }}">{{ service }}
+						</option>
+						<!--<p>{{ service }}</p>-->
+						{% endfor %}
+					</select>
+				</div>
+			</li>
+			<li>
+				<!--<table id="tables_list">-->
+					<!--<thead>-->
+					<!--<tr>-->
+						<!--<th>-->
+							<!--Table Name-->
+						<!--</th>-->
+						<!--<th>-->
+							<!--Table Health-->
+						<!--</th>-->
+					<!--</tr>-->
+					<!--</thead>-->
+					<!--<tbody id="tables_list_body">-->
+
+					<!--</tbody>-->
+				<!--</table>-->
+			</li>
+			<!--<li class="center-align">-->
+				<!--<button class="btn waves-effect waves-light" type="button" name="action" id="runtables">Run-->
+					<!--<i class="material-icons right">send-->
+						<!--</i>-->
+				<!--</button>-->
+			<!--</li>-->
+		</ul>
+			</div>
+		<!--<a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>-->
+
+		<div id="result_table" class="col s8" style="margin-top:5%"> <!-- style="overflow-x: scroll;" -->
+			<table id="tables_list">
+					<thead>
+					<tr>
+						<th>
+							Table Name
+						</th>
+						<th>
+							Table Health
+						</th>
+					</tr>
+					</thead>
+					<tbody id="tables_list_body">
+
+					</tbody>
+				</table>
+			<!-- <button class="btn waves-effect waves-light" type="button" name="action" id="runtables"
+					style="margin-left:50%; margin-top: 5%">Run
+					<i class="material-icons right">send
+						</i>
+				</button> -->
+			<!--<table  id="procResults" class="responsive-table centered striped" style="margin-top: 7%;">-->
+			<!--<thead>-->
+				<!--<tr>-->
+			<!--<th>TBL_NAME</th>-->
+		<!--<th>COL_NAME</th>-->
+		<!--<th>COL_DATA_LENGTH</th>-->
+		<!--<th>COL_DATE_TYPE</th>-->
+		<!--<th>COL_MIN_DATA_LENGTH</th>-->
+		<!--<th>COL_MAX_DATA_LENGTH</th>-->
+		<!--<th>COL_AVG_DATA_LENGTH</th>-->
+		<!--<th>COL_MIN_DATE</th>-->
+		<!--<th>COL_MAX_DATE</th>-->
+		<!--<th>COL_DISTINCT_CNT</th>-->
+		<!--<th>COL_NULLS_CNT</th>-->
+		<!--<th>COL_EMPTY_CNT</th>-->
+		<!--<th>COL_NULLS_PERCENTAGE</th>-->
+		<!--<th>COL_EMPTY_PERCENTAGE</th>-->
+		<!--<th>COL_FK</th>-->
+		<!--<th>COL_DATA_TYPE_RECOMMEND</th>-->
+
+		  <!--</tr>-->
+			<!--</thead>-->
+				<!--<tbody id="procResultsTabBody"></tbody>-->
+			<!--</table>-->
+		</div>
+	</div>
+    <!--<table id="tables_list"></table>-->
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+</script>
+<script>
+    var checkedIds = [];
+    var selectedDB;
+    $(document).on('change', '.filled-in', function() {
+        console.log("checkbox value changed");
+        checkedIds = $(".filled-in:checked").map(function() {
+            return this.id;
+        }).toArray();
+
+    })
+    $('#db_names').on('change', function() {
+        selectedDB = this.value;
+    })
+
+    // $("#runtables").on("click", function() {
+
+    //     $.ajax({
+    //         url: '/runProcedure/',
+    //         data: {
+    //             'table_names': JSON.stringify(
+    //                 checkedIds
+    //             ),
+    //             'db_name': selectedDB
+    //         },
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         success: function(data) {
+
+    //         $("#procResultsTabBody").empty();
+    //             for (let i = 0; i < data.data.length; i++) {
+    //             var row = "<tr>";
+    //             $("#procResultsTabBody").append("<tr>");
+    //             	for (let j = 0; j < data.data[i].length; j++){
+    //             	row = row +"<td>" + data.data[i][j] + "</td>";
+    //             	/*$("#procResultsTabBody").append("<td>" + data.data[i][j] + "</td>");*/
+    //             	}
+    //             	/*$("#procResultsTabBody").append("</tr>");*/
+    //             	row = row + "</tr>";
+    //             	$("#procResultsTabBody").append(row);
+
+    //             }
+    //             $("#result_table").show();
+    //             $("#procResults").show();
+
+
+    //         }
+    //     });
+
+    // });
+    $('#db_names').on('change', function() {
+    console.log("testing");
+    selectedDB = this.value;
+        $.ajax({
+            url: '/getTablesHealth/',
+            data: {
+                'db_name': selectedDB
+            },
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $("#tables_list_body").empty();
+                for (let i = 0; i < data.data.length; i++) {
+                var row = "<tr>";
+                $("#tables_list_body").append("<tr>");
+                 for (let j = 0; j < data.data[i].length; j++){
+                    
+                 if (data.data[i][j] == "GREEN"){
+				  row = row +"<td class='green'>" + data.data[i][j] + "</td>";  
+				}
+				else if (data.data[i][j] == "RED"){
+				  row = row +"<td class='red'>" + data.data[i][j] + "</td>";  //the selected class colors the row green//
+				}
+				else if (data.data[i][j] == "AMBER"){
+
+				  row = row +"<td class='amber'>" + data.data[i][j] + "</td>";
+				}
+				else {
+                    table = data.data[i][j];
+
+                    param = "/getProfileResults/?table_name={{'"+table+"'}}";
+                    console.log("params");
+                    console.log(param,table);
+					row = row +"<td><a style='color: black;' href='"+param+"' name='table_name'>" + table+ "</a></td>";
+				}
+                }
+                 row = row + "</tr>";
+                 $("#tables_list_body").append(row);
+
+                }
+                $("#result_table").show();
+                $("#tables_list").show();
+            }
+        });
+    });
+</script>
+{% else %}
+<p>No dbnames Available
+</p>
+{% endif %}
+
+</html>

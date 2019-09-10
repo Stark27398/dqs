@@ -1,0 +1,113 @@
+{% load static %}
+<html>
+   <head>
+      <title>Results</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   </head>
+   <style type="text/css">
+   thead{
+  background-color: #E15730; color: white;
+  }
+  td, th {
+  border: 1px solid #dddddd;
+  text-align: center;;
+  padding: 8px;
+}
+#tag{
+  font-weight: bolder;
+    font-size: x-large;
+    color: #E15730;
+}
+</style>
+   <body>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      {% csrf_token %} 
+      {% if table_name %}
+      <nav style="background-color:#E15730;">
+            <div class="nav-wrapper">
+                <!--<a href="#" class="brand-logo right"><img src="{% static 'images/logo.png' %}" alt="AKIRA"/></a>-->
+                <a href="#" class="brand-logo right">AKIRA
+				</a>
+            </div>
+        </nav>
+        <center><p id='tag'><b>Report for {{ table_name }}</b></p></center>
+        <div id="result_table" class="col s8" style="overflow-x: scroll; margin-left:5%; margin-right:5%">
+      <table  id="procResults" class="responsive-table centered striped">
+      <thead>
+        <tr>
+      <th>TBL_NAME</th>
+    <th>COL_NAME</th>
+    <th>COL_DATA_LENGTH</th>
+    <th>COL_DATE_TYPE</th>
+    <th>COL_MIN_DATA_LENGTH</th>
+    <th>COL_MAX_DATA_LENGTH</th>
+    <th>COL_AVG_DATA_LENGTH</th>
+    <th>COL_MIN_DATE</th>
+    <th>COL_MAX_DATE</th>
+    <th>COL_DISTINCT_CNT</th>
+    <th>COL_NULLS_CNT</th>
+    <th>COL_EMPTY_CNT</th>
+    <th>COL_NULLS_PERCENTAGE</th>
+    <th>COL_EMPTY_PERCENTAGE</th>
+    <th>COL_FK</th>
+    <th>COL_DATA_TYPE_RECOMMEND</th>
+
+      </tr>
+      </thead>
+        <tbody id="procResultsTabBody"></tbody>
+      </table>
+      </div>
+   </body>
+
+{% else %}
+<p>No dbnames Available
+</p>
+{% endif %}
+<script type="text/javascript">
+   $( document ).ready(function() {
+    // var obj = {'report_array': table_name}
+    $("#result_table").hide();
+                $("#procResults").hide();
+        $.ajax({
+            url: '/runProcedure/',
+            data: {
+                'table_name': "{{ table_name }}"
+            },
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              // alert("success");
+            $("#procResultsTabBody").empty();
+                for (let i = 0; i < data.data.length; i++) {
+                var row = "<tr>";
+                $("#procResultsTabBody").append("<tr>");
+                 for (let j = 0; j < data.data[i].length; j++){
+                 row = row +"<td>" + data.data[i][j] + "</td>";
+                 /*$("#procResultsTabBody").append("<td>" + data.data[i][j] + "</td>");*/
+                 }
+                 /*$("#procResultsTabBody").append("</tr>");*/
+                 row = row + "</tr>";
+                 $("#procResultsTabBody").append(row);
+
+                }
+                $("#result_table").show();
+                $("#procResults").show();
+
+
+            }
+        });
+
+  });
+   </script>
+</html>

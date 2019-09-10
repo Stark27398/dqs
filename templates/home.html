@@ -1,0 +1,53 @@
+{% load static %}
+<html>
+   <head>
+      <title>Database Server</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+         crossorigin="anonymous"></script>
+      <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+         crossorigin="anonymous"></script>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   </head>
+   <body>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      <script>
+         $(document).ready(function(){
+         $('select').formSelect();
+         });
+      </script>
+      <nav style="background-color:#E15730;">
+            <div class="nav-wrapper">
+                <!--<a href="#" class="brand-logo right"><img src="{% static 'images/logo.png' %}" alt="AKIRA"/></a>-->
+                <a href="#" class="brand-logo right">AKIRA
+				</a>
+            </div>
+        </nav>
+      <form method="GET" id="db_select" action="/getDatabases" class="center-align" style="margin-top:15%">
+         {% csrf_token %}
+         {{ form.as_p }}
+
+         <div class="input-field col s12" style="width: 20%;
+    align-content: center;
+    margin-left: 40%; margin-bottom: 3%;">
+            <select name="dropdown" id="selected_db" class="center-align">
+               <option selected="selected" disabled>Please select a database server</option>
+               <option value="mysql">MySQL</option>
+               <option value="mssql">MSSQL</option>
+               <option value="postgres">PostgreSQL</option>
+            </select>
+            <!--<label>Materialize Select</label>-->
+         </div>
+         <!--<button type="submit">Submit</button>-->
+         <button class="btn waves-effect waves-light" type="submit" name="action">View Database
+         <i class="material-icons right">send</i>
+         </button>
+      </form>
+   </body>
+</html>
