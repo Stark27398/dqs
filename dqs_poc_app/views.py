@@ -33,13 +33,13 @@ def connect_mssql():
     #                       'Server=DESKTOP-UC1L6FT\SQLEXPRESS;'
     #                       'Database=ExtractionData;'
     #                       'Trusted_Connection=yes;')
-    # conn = pyodbc.connect('Driver={ODBC Driver 13 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
+    # conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
 
     server = 'dqspilot.database.windows.net'
     database = 'dq_solution'
     username = 'dqs_admin'
     password = 'Akira@123'
-    driver = '{ODBC Driver 13 for SQL Server}'
+    driver = '{ODBC Driver 17 for SQL Server}'
     conn = pyodbc.connect(
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 
@@ -60,13 +60,13 @@ def connect_postgresql():
 def get_tables(request):
     jsonResponseObject = {}
     db_name = request.GET.get('db_name')
-    # conn = pyodbc.connect('Driver={ODBC Driver 13 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
+    # conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
 
     server = 'dqspilot.database.windows.net'
     database = 'dq_solution'
     username = 'dqs_admin'
     password = 'Akira@123'
-    driver = '{ODBC Driver 13 for SQL Server}'
+    driver = '{ODBC Driver 17 for SQL Server}'
     conn = pyodbc.connect(
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 
@@ -99,13 +99,13 @@ def runProcedure(request):
     table_name = request.GET.get('table_name')
     # db_name = request.GET.get('db_name')
     print("db name run procedure",table_name)
-    # conn = pyodbc.connect('Driver={ODBC Driver 13 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
+    # conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
 
     server = 'dqspilot.database.windows.net'
     database = 'dq_solution'
     username = 'dqs_admin'
     password = 'Akira@123'
-    driver = '{ODBC Driver 13 for SQL Server}'
+    driver = '{ODBC Driver 17 for SQL Server}'
     conn = pyodbc.connect(
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 
@@ -128,14 +128,14 @@ def getResults():
     jsonResponseObject = {}
     # db_name_connect = db_name
     # print("JSON db_name",db_name_connect)
-    # conn = pyodbc.connect('Driver={ODBC Driver 13 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
+    # conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database=dq_solution;'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;')
 
 
     server = 'dqspilot.database.windows.net'
     database = 'dq_solution'
     username = 'dqs_admin'
     password = 'Akira@123'
-    driver = '{ODBC Driver 13 for SQL Server}'
+    driver = '{ODBC Driver 17 for SQL Server}'
     conn = pyodbc.connect(
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 
@@ -184,14 +184,14 @@ def getResults():
 def getTablesHealth(request):
     jsonResponseObject = {}
     db_name = request.GET.get('db_name');
-    # conn = pyodbc.connect('Driver={ODBC Driver 13 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database='+db_name+';'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;'+'Authentication=ActiveDirectoryPassword')
+    # conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database='+db_name+';'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;'+'Authentication=ActiveDirectoryPassword')
 
 
     server = 'dqspilot.database.windows.net'
     database = 'dq_solution'
     username = 'dqs_admin'
     password = 'Akira@123'
-    driver = '{ODBC Driver 13 for SQL Server}'
+    driver = '{ODBC Driver 17 for SQL Server}'
     conn = pyodbc.connect(
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + db_name + ';UID=' + username + ';PWD=' + password)
 
