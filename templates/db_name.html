@@ -233,7 +233,7 @@ background-color:amber;
     // });
     $('#db_names').on('change', function() {
     console.log("testing");
-    $("#result_table").empty();
+    $("#result_table").hide();
     selectedDB = this.value;
     var res = localStorage.getItem($('#db_names').val());
         if(res){
