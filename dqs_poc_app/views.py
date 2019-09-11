@@ -182,8 +182,13 @@ def getResults():
     return JsonResponse(jsonResponseObject, safe=False)
 
 def getTablesHealth(request):
+    if "health" in request.session:
+        jsonResponseObject = request.session["health"]
+        del request.session["health"]
+        print('#############            ','By Session','           ##########')
+        return JsonResponse(jsonResponseObject, safe=False)
     jsonResponseObject = {}
-    db_name = request.GET.get('db_name');
+    db_name = request.GET.get('db_name')
     # conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'+'Server=dqspilot.database.windows.net;'+'Database='+db_name+';'+'UID=dqs_admin;'+'PWD=Akira@123;'+'Trusted_Connection=yes;'+'Authentication=ActiveDirectoryPassword')
 
 
@@ -202,12 +207,14 @@ def getTablesHealth(request):
     # table_names = []
     i = 0
     for x in results:
-        print("x", x)
+        # print("x", x)
         table_names.append(list(x))
         i = i + 1
-    print("table names",table_names)
+    # print("table names",table_names)
     jsonResponseObject['status'] = 200
     jsonResponseObject['data'] = table_names
+    request.session["health"]=str(jsonResponseObject)
+    print(jsonResponseObject)
     return JsonResponse(jsonResponseObject, safe=False)
 
 def getProfileResults(request):
