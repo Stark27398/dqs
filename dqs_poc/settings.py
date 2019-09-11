@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'dqs_poc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/usr/db.sqlite3',
+        'NAME': '/home/site/wwwroot/db.sqlite3',
     }
 }
 
