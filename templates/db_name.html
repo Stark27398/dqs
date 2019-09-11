@@ -38,10 +38,27 @@ background-color:amber;
 </style>
 </head>
 
-<body>
+<body onload="historyfunc()">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js">
     </script>
     <script>
+    function historyfunc(){
+         
+        console.log($('#db_names').val());
+        if($('#db_names').val()){
+            var res = localStorage.getItem($('#db_names').val());
+            if(res){
+                from = "session";   
+                console.log('Loading session');     
+                createtable(res,from);
+            }else{
+                console.log(res);
+            }
+        }else{
+            localStorage.getItem('health')=null;
+        }
+        
+    }
         $(document).ready(function() {
         $("#tables_list").hide();
         $("#result_table").hide();
@@ -77,7 +94,7 @@ background-color:amber;
 						</h6>
 					<!-- Nav tabs -->
 					<select name="dropdown" id="db_names" class="center-align" style="display:block;">
-						<option selected="selected" disabled>Select
+						<option selected="selected" disabled value="0">Select
 						</option>
 						{% for service in db_names %}
 						<option value="{{ service }}">{{ service }}
@@ -216,49 +233,71 @@ background-color:amber;
     // });
     $('#db_names').on('change', function() {
     console.log("testing");
+    $("#result_table").empty();
     selectedDB = this.value;
-        $.ajax({
-            url: '/getTablesHealth/',
-            data: {
-                'db_name': selectedDB
-            },
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                $("#tables_list_body").empty();
-                for (let i = 0; i < data.data.length; i++) {
-                var row = "<tr>";
-                $("#tables_list_body").append("<tr>");
-                 for (let j = 0; j < data.data[i].length; j++){
-                    
-                 if (data.data[i][j] == "GREEN"){
-				  row = row +"<td class='green'>" + data.data[i][j] + "</td>";  
-				}
-				else if (data.data[i][j] == "RED"){
-				  row = row +"<td class='red'>" + data.data[i][j] + "</td>";  //the selected class colors the row green//
-				}
-				else if (data.data[i][j] == "AMBER"){
+    var res = localStorage.getItem($('#db_names').val());
+        if(res){
+            from = "session";   
+            console.log('Loading session');     
+            createtable(res,from);
+        }else{
+            $.ajax({
+                url: '/getTablesHealth/',
+                data: {
+                    'db_name': selectedDB
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $("#tables_list_body").empty();
+                    for (let i = 0; i < data.data.length; i++) {
+                    var row = "<tr>";
+                    $("#tables_list_body").append("<tr>");
+                    for (let j = 0; j < data.data[i].length; j++){
+                        
+                    if (data.data[i][j] == "GREEN"){
+                    row = row +"<td class='green'>" + data.data[i][j] + "</td>";  
+                    }
+                    else if (data.data[i][j] == "RED"){
+                    row = row +"<td class='red'>" + data.data[i][j] + "</td>";  //the selected class colors the row green//
+                    }
+                    else if (data.data[i][j] == "AMBER"){
 
-				  row = row +"<td class='amber'>" + data.data[i][j] + "</td>";
-				}
-				else {
-                    table = data.data[i][j];
+                    row = row +"<td class='amber'>" + data.data[i][j] + "</td>";
+                    }
+                    else {
+                        table = data.data[i][j];
 
-                    param = "/getProfileResults/?table_name={{'"+table+"'}}";
-                    console.log("params");
-                    console.log(param,table);
-					row = row +"<td><a style='color: black;' href='"+param+"' name='table_name'>" + table+ "</a></td>";
-				}
+                        param = "/getProfileResults/?table_name={{'"+table+"'}}";
+                        console.log("params");
+                        console.log(param,table);
+                        row = row +"<td><a style='color: black;' href='"+param+"' name='table_name'>" + table+ "</a></td>";
+                    }
+                    }
+                    row = row + "</tr>";
+                    $("#tables_list_body").append(row);
+
+                    }
+                    localStorage.setItem($('#db_names').val(), $('#result_table').html());
+                    from = "Database";
+                    createtable($('#result_table').html(),from);
                 }
-                 row = row + "</tr>";
-                 $("#tables_list_body").append(row);
-
-                }
-                $("#result_table").show();
-                $("#tables_list").show();
-            }
-        });
+            });
+        }
     });
+    {% comment %} window.onpopstate = function (e) {
+        var res = sessionStorage.getItem('health'); 
+        from = "session";        
+        success(res,from);
+    }  {% endcomment %}
+    
+    function createtable(response,from){
+        $("#result_table").show();
+        $("#result_table").empty();
+        $('#result_table').html(response);
+        $("#tables_list").show();
+        console.log('via function',from);
+    }
 </script>
 {% else %}
 <p>No dbnames Available
