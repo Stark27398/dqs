@@ -14,6 +14,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    </script>
    </head>
    <style type="text/css">
    thead{
@@ -29,8 +32,43 @@
     font-size: x-large;
     color: #E15730;
 }
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  position:absolute;
+  top:45%;
+  left:45%;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.container{
+  width: 90%;
+  margin:5% auto;
+  display: none;
+}
+.card{
+  margin:1%;
+  margin-bottom: 5%;
+}
+
 </style>
    <body>
+     
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
       {% csrf_token %} 
       {% if table_name %}
@@ -42,7 +80,16 @@
             </div>
         </nav>
         <center><p id='tag'><b>Report for {{ table_name }}</b></p></center>
-        <div id="result_table" class="col s8" style="overflow-x: scroll; margin-left:5%; margin-right:5%">
+        <div class="container">
+          <div class="card" style="height: 350px; width: 600px;float:left;padding-top:1%">
+            <canvas id="bar"></canvas>
+          </div>
+          <div class="card" style="height: 350px; width: 600px;float:left;padding-top:1%">
+            <canvas id="pie"></canvas>
+          </div>
+        </div>
+        <div class="row"></div>
+        <div id="result_table" class="col s8" style="overflow-x: scroll; margin-left:5%; margin-right:5%;float: none;margin-bottom:5%">
       <table  id="procResults" class="responsive-table centered striped">
       <thead>
         <tr>
@@ -68,6 +115,8 @@
         <tbody id="procResultsTabBody"></tbody>
       </table>
       </div>
+      <div class="loader center-align"></div>
+      
    </body>
 
 {% else %}
@@ -89,11 +138,24 @@
             success: function(data) {
               // alert("success");
             $("#procResultsTabBody").empty();
+              var name = [];
+              var n_per = [];
+              var n_count = [];
+              var total=0;
                 for (let i = 0; i < data.data.length; i++) {
                 var row = "<tr>";
                 $("#procResultsTabBody").append("<tr>");
                  for (let j = 0; j < data.data[i].length; j++){
                  row = row +"<td>" + data.data[i][j] + "</td>";
+                 if(j==1){
+                   name.push(data.data[i][j]);
+                 }else if(j==10){
+                   n_count.push(parseFloat(data.data[i][j]));
+                   total=total+parseFloat(data.data[i][j]);
+                 }else if(j==12){
+                   n_per.push(parseFloat(data.data[i][j]));
+                 }
+
                  /*$("#procResultsTabBody").append("<td>" + data.data[i][j] + "</td>");*/
                  }
                  /*$("#procResultsTabBody").append("</tr>");*/
@@ -103,11 +165,118 @@
                 }
                 $("#result_table").show();
                 $("#procResults").show();
-
-
+                $('.loader').hide();
+                console.log(name,n_count,n_per,total);
+                $('.container').show();
+                barChart(name,n_per);
+                pieChart(name,n_count,total);
             }
         });
+        
 
   });
+
+    function pieChart(name,count,total) {
+      var c=[];
+      for(i=0;i<name.length;i++){
+        c.push(count[i]/total);
+      }
+      var ctx_p = document.getElementById('pie').getContext('2d');
+      var chart_p = new Chart(ctx_p, {
+        // The type of chart we want to create
+        type: 'pie',
+
+        // The data for our dataset
+        data: {
+          labels: name,
+          datasets: [{
+            label: 'Null count share',
+            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',],
+            borderColor: ['rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'],
+            borderWidth: 2,
+            data: c
+          }]
+        },
+
+        // Configuration options go here
+        options: {
+          title: {
+            display: true,
+            text: 'Pie Chart - Null Count Share',
+            fontSize: 20
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      });
+    }
+
+    
+
+    function barChart(name,per){
+      var ctx = document.getElementById('bar').getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+          labels: name,
+          datasets: [{
+            label: 'Null Percentage',
+            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',],
+            borderColor: ['rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'],
+            borderWidth: 2,
+            data : per,
+          }]
+        },
+
+        // Configuration options go here
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              gridLines:{
+                display:false
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Null Percentage'
+              }
+            }],
+            xAxes:[{
+              gridLines: {
+                display:false
+              }
+            }]
+          },
+          legend:{
+            position:'bottom',
+          },
+          title: {
+            display: true,
+            text: 'Bar Graph - Null Percentage',
+            fontSize: 20
+          }
+        }
+      });
+    }
+      
    </script>
+   
 </html>
