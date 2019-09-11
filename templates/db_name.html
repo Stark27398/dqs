@@ -34,6 +34,29 @@
 .amber{
 background-color:amber;
 }
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  position:absolute;
+  top:45%;
+  left:45%;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 </style>
 </head>
@@ -130,7 +153,7 @@ background-color:amber;
 		</ul>
 			</div>
 		<!--<a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>-->
-
+        <div class="loader" style="display:none"></div>
 		<div id="result_table" class="col s8" style="margin-top:5%"> <!-- style="overflow-x: scroll;" -->
 			<table id="tables_list">
 					<thead>
@@ -232,9 +255,14 @@ background-color:amber;
 
     // });
     $('#db_names').on('change', function() {
+        
     console.log("testing");
     $("#result_table").hide();
     selectedDB = this.value;
+    if(selectedDB=='dq_solution'){
+        console.log('Loading');
+        $('.loader').show();
+    }
     var res = localStorage.getItem($('#db_names').val());
         if(res){
             from = "session";   
@@ -291,6 +319,8 @@ background-color:amber;
         $("#result_table").empty();
         $('#result_table').html(response);
         $("#tables_list").show();
+        $('.loader').hide();
+        console.log(response);
         console.log('via function',from);
     }
 </script>
