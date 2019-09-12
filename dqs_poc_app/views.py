@@ -140,29 +140,28 @@ def getResults():
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 
     cursor = conn.cursor()
-    cursor.execute("SELECT TBL_NAME,COL_NAME,COL_DATA_LENGTH,COL_DATE_TYPE,COL_MIN_DATA_LENGTH,COL_MAX_DATA_LENGTH\
+    cursor.execute("SELECT COL_NAME,COL_DATA_LENGTH,COL_DATE_TYPE,COL_MIN_DATA_LENGTH,COL_MAX_DATA_LENGTH\
                     ,COL_AVG_DATA_LENGTH,COL_MIN_DATE,COL_MAX_DATE,COL_DISTINCT_CNT,COL_NULLS_CNT,COL_EMPTY_CNT,"
                    "COL_NULLS_PERCENTAGE,"
                    "COL_EMPTY_PERCENTAGE,COL_FK,COL_DATA_TYPE_RECOMMEND"
                    "\
                  FROM DATA_ACC_PROFILER")
     cols_dict = {
-        1: 'TBL_NAME',
-        2: 'COL_NAME',
-        3: 'COL_DATA_LENGTH',
-        4: 'COL_DATE_TYPE',
-        5: 'COL_MIN_DATA_LENGTH',
-        6: 'COL_MAX_DATA_LENGTH',
-        7: 'COL_AVG_DATA_LENGTH',
-        8: 'COL_MIN_DATE',
-        9: 'COL_MAX_DATE',
-        10: 'COL_DISTINCT_CNT',
-        11: 'COL_NULLS_CNT',
-        12: 'COL_EMPTY_CNT',
-        13: 'COL_NULLS_PERCENTAGE',
-        14: 'COL_EMPTY_PERCENTAGE',
-        15: 'COL_FK',
-        16: 'COL_DATA_TYPE_RECOMMEND',
+        1: 'COL_NAME',
+        2: 'COL_DATA_LENGTH',
+        3: 'COL_DATE_TYPE',
+        4: 'COL_MIN_DATA_LENGTH',
+        5: 'COL_MAX_DATA_LENGTH',
+        6: 'COL_AVG_DATA_LENGTH',
+        7: 'COL_MIN_DATE',
+        8: 'COL_MAX_DATE',
+        9: 'COL_DISTINCT_CNT',
+        10: 'COL_NULLS_CNT',
+        11: 'COL_EMPTY_CNT',
+        12: 'COL_NULLS_PERCENTAGE',
+        13: 'COL_EMPTY_PERCENTAGE',
+        14: 'COL_FK',
+        15: 'COL_DATA_TYPE_RECOMMEND',
     }
     myresult = cursor.fetchall()
     table_names = []
