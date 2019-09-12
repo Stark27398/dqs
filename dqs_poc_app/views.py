@@ -81,9 +81,9 @@ def get_tables(request):
     return JsonResponse(jsonResponseObject, safe=False)
 
 def login_validation(request):
-    user_name = request.GET.get("username")
+    user_name = request.POST.get("username")
     print("username",user_name)
-    password = request.GET.get("password")
+    password = request.POST.get("password")
     print("password",password)
     user = authenticate(username = user_name, password = password)
     if user is not None:
