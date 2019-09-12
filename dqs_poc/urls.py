@@ -15,7 +15,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='login.html'), name='login'),
     path('getDatabases/', db_select, name='db_select'),
     path('getTables/', get_tables, name='get_tables'),
-    path('login/', login_validation, name='login_validation'),
+    path('login', login_validation, name='login_validation'),
     path('runProcedure/', runProcedure, name='runProcedure'),
     path('getTablesHealth/', getTablesHealth, name='getTablesHealth'),
     path('getProfileResults/', getProfileResults, name='getProfileResults'),
