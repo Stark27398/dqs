@@ -31,7 +31,7 @@
   font-weight: bolder;
     font-size: x-large;
     color: #E15730;
-}	   
+}
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
@@ -57,13 +57,30 @@
 }
 
 .container{
-  width: 90%;
+  width: 80%;
   margin:5% auto;
+  margin-left: 10%;
   display: none;
+  padding:2px 16px;
 }
 .card{
   margin:1%;
   margin-bottom: 5%;
+  height: 45%; 
+  width: 48%;
+  padding-top:1%
+}
+@media only screen and (max-width: 1100px){
+  .card{
+    width:100%;
+    height:60%;
+  }
+}
+@media only screen and (max-width: 750px){
+  .card{
+    width:100%;
+    height:50%;
+  }
 }
 
 </style>
@@ -80,12 +97,18 @@
             </div>
         </nav>
         <center><p id='tag'><b>Report for {{ table_name }}</b></p></center>
-        <div class="container">
-          <div class="card" style="height: 350px; width: 600px;float:left;padding-top:1%">
+        <div class="container center-align">
+          <div class="card" style="float:left;">
             <canvas id="bar"></canvas>
           </div>
-          <div class="card" style="height: 350px; width: 600px;float:left;padding-top:1%">
+          <div class="card" style="float:right;">
             <canvas id="pie"></canvas>
+          </div>
+          <div class="card" style="float:left;">
+            <canvas id="barCount"></canvas>
+          </div>
+          <div class="card" style="float:right;">
+            <canvas id="pieCount"></canvas>
           </div>
         </div>
         <div class="row"></div>
@@ -93,7 +116,6 @@
       <table  id="procResults" class="responsive-table centered striped">
       <thead>
         <tr>
-      <th>TBL_NAME</th>
     <th>COL_NAME</th>
     <th>COL_DATA_LENGTH</th>
     <th>COL_DATE_TYPE</th>
@@ -126,6 +148,7 @@
 <script type="text/javascript">
    $( document ).ready(function() {
     // var obj = {'report_array': table_name}
+    M.AutoInit();
     $("#result_table").hide();
                 $("#procResults").hide();
         $.ajax({
@@ -141,19 +164,22 @@
               var name = [];
               var n_per = [];
               var n_count = [];
+              var dist = [];
               var total=0;
                 for (let i = 0; i < data.data.length; i++) {
                 var row = "<tr>";
                 $("#procResultsTabBody").append("<tr>");
                  for (let j = 0; j < data.data[i].length; j++){
                  row = row +"<td>" + data.data[i][j] + "</td>";
-                 if(j==1){
+                 if(j==0){
                    name.push(data.data[i][j]);
-                 }else if(j==10){
+                 }else if(j==8){
+                   dist.push(parseInt(data.data[i][j]));
+                 }else if(j==9){
                    n_count.push(parseFloat(data.data[i][j]));
                    total=total+parseFloat(data.data[i][j]);
-                 }else if(j==12){
-                   n_per.push(parseFloat(data.data[i][j]));
+                 }else if(j==11){
+                   n_per.push(parseFloat(data.data[i][j]).toFixed(2));
                  }
 
                  /*$("#procResultsTabBody").append("<td>" + data.data[i][j] + "</td>");*/
@@ -170,6 +196,8 @@
                 $('.container').show();
                 barChart(name,n_per);
                 pieChart(name,n_count,total);
+                countChart1(name,dist);
+                countChart2(name,dist);
             }
         });
         
@@ -179,7 +207,7 @@
     function pieChart(name,count,total) {
       var c=[];
       for(i=0;i<name.length;i++){
-        c.push(count[i]/total);
+        c.push(((count[i] / total)*100).toFixed(2));
       }
       var ctx_p = document.getElementById('pie').getContext('2d');
       var chart_p = new Chart(ctx_p, {
@@ -208,11 +236,24 @@
         options: {
           title: {
             display: true,
-            text: 'Pie Chart - Null Count Share',
+            text: 'Null Count Share',
             fontSize: 20
           },
           legend: {
             position: 'bottom'
+          },
+          tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                var label = data.labels[tooltipItem.datasetIndex] || '';
+
+                if (label) {
+                  label += ' : ';
+                }
+                label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + '%';
+                return label;
+              }
+            }
           }
         }
       });
@@ -262,6 +303,10 @@
             xAxes:[{
               gridLines: {
                 display:false
+              },
+              scaleLabel:{
+                display:true,
+                labelString: 'Column Name'
               }
             }]
           },
@@ -270,13 +315,129 @@
           },
           title: {
             display: true,
-            text: 'Bar Graph - Null Percentage',
+            text: 'Null Percentage',
             fontSize: 20
+          },
+          tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                var label = 'Null Percentage' || '';
+
+                if (label) {
+                  label += ' : ';
+                }
+                label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + '%';
+                return label;
+              }
+            }
           }
         }
       });
     }
       
+
+
+      function countChart2(name, count) {
+          
+          var ctx_p = document.getElementById('pieCount').getContext('2d');
+          var chart_p = new Chart(ctx_p, {
+            // The type of chart we want to create
+            type: 'pie',
+
+            // The data for our dataset
+            data: {
+              labels: name,
+              datasets: [{
+                label: 'Distinct Count',
+                backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',],
+                borderColor: ['rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)'],
+                borderWidth: 2,
+                data: count
+              }]
+            },
+
+            // Configuration options go here
+            options: {
+              title: {
+                display: true,
+                text: 'Distinct Count',
+                fontSize: 20
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          });
+        }
+
+
+
+        function countChart1(name, count) {
+          var ctx = document.getElementById('barCount').getContext('2d');
+          var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+              labels: name,
+              datasets: [{
+                label: 'Distinct Count',
+                backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',],
+                borderColor: ['rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)'],
+                borderWidth: 2,
+                data: count,
+              }]
+            },
+
+            // Configuration options go here
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  },
+                  gridLines: {
+                    display: false
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Distinct Count'
+                  }
+                }],
+                xAxes: [{
+                  gridLines: {
+                    display: false
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Column Name'
+                  }
+                }]
+              },
+              legend: {
+                position: 'bottom',
+              },
+              title: {
+                display: true,
+                text: 'Distinct Count',
+                fontSize: 20
+              }
+            }
+          });
+        }
    </script>
    
 </html>
