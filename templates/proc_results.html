@@ -16,6 +16,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
     </script>
    </head>
    <style type="text/css">
@@ -222,11 +223,15 @@
             backgroundColor: ['rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
               'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',],
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'],
             borderColor: ['rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
               'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'],
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'],
             borderWidth: 2,
             data: c
           }]
@@ -234,6 +239,12 @@
 
         // Configuration options go here
         options: {
+          plugins:{
+            labels: {
+              render: 'percentage',
+              precision: 2
+            },
+          },
           title: {
             display: true,
             text: 'Null Count Share',
@@ -275,11 +286,15 @@
             backgroundColor: ['rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
               'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',],
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'],
             borderColor: ['rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
               'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'],
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'],
             borderWidth: 2,
             data : per,
           }]
@@ -287,10 +302,20 @@
 
         // Configuration options go here
         options: {
+          plugins: {
+            labels: {
+              render: function (args) {
+                return args.value+'%';
+              }
+            },
+          },
           scales: {
             yAxes: [{
               ticks: {
-                beginAtZero: true
+                beginAtZero: true,
+                callback: function (value, index, values) {
+                  return value;
+                }
               },
               gridLines:{
                 display:false
@@ -319,6 +344,7 @@
             fontSize: 20
           },
           tooltips: {
+            display:false,
             callbacks: {
               label: function (tooltipItem, data) {
                 var label = 'Null Percentage' || '';
@@ -352,11 +378,15 @@
                 backgroundColor: ['rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
                   'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',],
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'],
                 borderColor: ['rgba(255, 99, 132, 1)',
                   'rgba(54, 162, 235, 1)',
                   'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)'],
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'],
                 borderWidth: 2,
                 data: count
               }]
@@ -364,6 +394,11 @@
 
             // Configuration options go here
             options: {
+              plugins: {
+                labels: {
+                  render: 'value',
+                },
+              },
               title: {
                 display: true,
                 text: 'Distinct Count',
@@ -392,11 +427,15 @@
                 backgroundColor: ['rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
                   'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',],
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'],
                 borderColor: ['rgba(255, 99, 132, 1)',
                   'rgba(54, 162, 235, 1)',
                   'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)'],
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'],
                 borderWidth: 2,
                 data: count,
               }]
@@ -404,6 +443,11 @@
 
             // Configuration options go here
             options: {
+              plugins: {
+                labels: {
+                  render: 'value',
+                },
+              },
               scales: {
                 yAxes: [{
                   ticks: {
@@ -434,7 +478,7 @@
                 display: true,
                 text: 'Distinct Count',
                 fontSize: 20
-              }
+              },
             }
           });
         }
